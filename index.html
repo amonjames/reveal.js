@@ -20,12 +20,130 @@
 			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
+		<style>
+		.details {
+			display: flex;
+			width: 500px;
+		}
+		.details .primary {
+			height: 400px;
+			width: 300px;
+			border: 2px solid white;
+		}
+		.details .secondary {
+			border: 2px dashed white;
+			background: pink;
+			flex-grow: 1;
+		}
+		.details .dominant {
+			height: 70px;
+			background: red;
+		}
+		.details .sticky-panel {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+		}
+		.details .container {
+			flex-grow: 1;
+			border: 2px solid white;
+		}
+		.details .container .item {
+			background: red;
+		}
+		#buttons {
+			position: absolute;
+			top: 100px;
+			right: 20px;
+		}
+		#buttons > div {
+			border: 2px solid white;
+			cursor: pointer;
+		}
+		#buttons > div:hover {
+			background: rgba(255, 255, 255, 0.3);
+		}
+
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h3>Stick Tight with Flex Box</h1>
+					<p>Accomplishing sticky ads with the power of CSS</p>
+					<img src="/img/flex.jpg" />
+				</section>
+				<section>
+					<h3>The Problem</h3>
+					<video width="100%" height="100%" src="img/stickyads.mov" controls autoplay loop>
+					</video>
+				</section>
+				<section>
+					<h3>How this was done before (With JS)</h3>
+					<pre><code class="hljs" >
+$.map(stickyAds, function (val, i) {
+    return new Sticky($(val), {
+        rangeTop: function () {
+            return stickyPanel.offset().top + i / 3 * remainHeightForAds() + leadGeneratorTotalHeight;
+        },
+        rangeBottom: function () {
+            return stickyPanel.offset().top + (i + 1) / 3 * remainHeightForAds() + leadGeneratorHeight;
+        },
+        fixAt: function () {
+            return leadGeneratorTotalHeight;
+        },
+        container: stickyPanel
+    });
+});
+					</code></pre>
+				</section>
+				<section>
+					<h3>Why this isn't ideal</h3>
+					<ul>
+					<li>JS had to position ads based on a calc of the height of the page, and set ranges for when the ad was to be sticky. A scroll handler was then throttled to ~16ms (60fps) to check if the ads positioning needed to update and then interacted with the DOM to update it. <strong style="display:inline-block;background:yellow;color:#000;">Holy layout thrashing Batman!</strong></li>
+					<li>If business requirements changed to add or remove an ad, the code and calculation would have to change</li></ul>
+				</section>
+				<section>
+					<h3>The way forward</h3>
+					<p>There are two problems we want to solve here.</p>
+					<ol>
+						<li><span style="text-decoration:underline">Layout</span>: We want to have a primary column of content, and a secondary column of ads. Each ad is to be contained and each container is meant to have equal height. For example: if there are 3 ads on the page, each ad should be fixed for 1/3rd of the height of the primary column.</li>
+						<li><span style="text-decoration:underline">Sticky Behavior</span>: We want to have an item that sticks the whole height of the page, and also ads that stick below it and swap in and out depending on how far down the page you are.</li>
+					</ol>
+				</section>
+				<section style="text-align:left">
+					<h3>Layout</h3>
+					<p>Instead of using floats and relying on js to create equal height containers positioned down the sidebar, let's use <strong style="display:inline-block;background:yellow;color:#000;">FlexBox!</strong></p>
+					<p>Fun fact: I have learned everything I know about FlexBox from a frog - 
+					<a target="_blank" href="http://flexboxfroggy.com/">Flexbox Froggy</a></p>
+				</section>
+				<section data-state="flexexample">
+					<h3>Layout</h3>
+					<div class="details">
+						<div class="primary">
+						</div>
+						<div class="secondary">
+							<div class="sticky-panel">
+								<div class="dominant">
+								</div>
+								<div class="container">
+									<div class="item">
+									</div>
+								</div>
+								<div class="container">
+									<div class="item">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="buttons">
+						<div id="toggleheight">Toggle Height</div>
+						<div id="addbox">Add Box</div>
+						<div id="removebox">Remove Box</div>
+					</div>
+				</section>
 			</div>
 		</div>
 
@@ -45,6 +163,25 @@
 					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
 				]
 			});
+			var heights = ['300px', '400px', '500px'];
+			Reveal.addEventListener( 'flexexample', function() {
+				document.querySelector('#toggleheight').addEventListener('click', function(){
+					var primary = document.querySelector('.details .primary');
+					var currentHeight = primary.style.height;
+					var newHeight = heights[(heights.indexOf(currentHeight)+1)%heights.length];
+					document.querySelector('.details .primary').style.height=newHeight;
+				});
+				document.querySelector('#addbox').addEventListener('click', function(){
+					var container = document.querySelector('.secondary .container');
+					var panel = document.querySelector('.sticky-panel');
+					panel.appendChild(container.cloneNode(true));
+				});
+				document.querySelector('#removebox').addEventListener('click', function(){
+					var panel = document.querySelector('.sticky-panel');
+					panel.querySelectorAll('.container').length > 1 &&
+						panel.removeChild(panel.querySelector('.container'));
+				});
+			} );
 		</script>
 	</body>
 </html>
