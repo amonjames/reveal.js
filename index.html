@@ -75,7 +75,7 @@
 					<img src="/img/flex.jpg" />
 				</section>
 				<section>
-					<h3>The Problem</h3>
+					<h4>Sticky Content Demo</h4>
 					<video width="100%" height="100%" src="img/stickyads.mov" controls autoplay loop>
 					</video>
 				</section>
@@ -105,21 +105,46 @@ $.map(stickyAds, function (val, i) {
 					<li>If business requirements changed to add or remove an ad, the code and calculation would have to change</li></ul>
 				</section>
 				<section>
-					<h3>The way forward</h3>
+					<h3>Lets take a step back</h3>
 					<p>There are two problems we want to solve here.</p>
 					<ol>
 						<li><span style="text-decoration:underline">Layout</span>: We want to have a primary column of content, and a secondary column of ads. Each ad is to be contained and each container is meant to have equal height. For example: if there are 3 ads on the page, each ad should be fixed for 1/3rd of the height of the primary column.</li>
 						<li><span style="text-decoration:underline">Sticky Behavior</span>: We want to have an item that sticks the whole height of the page, and also ads that stick below it and swap in and out depending on how far down the page you are.</li>
 					</ol>
 				</section>
-				<section style="text-align:left">
-					<h3>Layout</h3>
-					<p>Instead of using floats and relying on js to create equal height containers positioned down the sidebar, let's use <strong style="display:inline-block;background:yellow;color:#000;">FlexBox!</strong></p>
-					<p>Fun fact: I have learned everything I know about FlexBox from a frog - 
-					<a target="_blank" href="http://flexboxfroggy.com/">Flexbox Froggy</a></p>
+				<section>
+					<h4>Layout Problem #1 - equal height columns</h4>
+					<div style="display:table;border-collapse:separate;border-spacing:40px;">
+						<div style="display:table-cell">
+							<p>The Problem</p>
+							<div style="display: flex;width: 400px;">
+
+							<div style="flex-grow:1;background:blue;height:300px"></div><div style="flex-grow:1;background:white;height:200px"></div>
+							</div>
+						</div>
+						<div style="display:table-cell;">
+							<p>The Desire</p>
+							<div style="display: flex;width: 400px;">
+
+							<div style="flex-grow:1;background:blue;height:300px"></div><div style="flex-grow:1;background:white;height:300px"></div>
+							</div>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3>Equal Height Column Options</h3>
+					<ul>
+						<li class="fragment">Use Tables</li>
+						<li class="fragment">CSS display: table/table-cell</li>
+						<li class="fragment">Absolute Columns</li>
+						<li class="fragment">'One True Layout' - overflow:hidden + large padding + negative large margin</li>
+						<li class="fragment">JS Solutions</li>
+						<li class="fragment"><strong style="color:yellow;">Flexbox</strong><span class="fragment"> - Fun fact: I have learned everything I know about FlexBox from a frog - 
+					<a target="_blank" href="http://flexboxfroggy.com/">Flexbox Froggy</a></span></li>
+					</ul>
 				</section>
 				<section data-state="flexexample">
-					<h3>Layout</h3>
+					<h4>Layout Problem #2 - Equal height rows</h4>
 					<div class="details">
 						<div class="primary">
 						</div>
@@ -182,6 +207,8 @@ $.map(stickyAds, function (val, i) {
 						panel.removeChild(panel.querySelector('.container'));
 				});
 			} );
+
+			// Something else to consider is that more and more browsers are implementing hardware accelerated scrolling to improve performance. The problem with this is that on JS scroll handlers are in play, browsers may fall back into a slower (software) mode. Now we're no longer running on the GPU. Instead, we're back on the CPU. The result? User's perceive more jank when scrolling your page.
 		</script>
 	</body>
 </html>
