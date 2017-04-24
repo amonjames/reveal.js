@@ -99,10 +99,20 @@ $.map(stickyAds, function (val, i) {
 					</code></pre>
 				</section>
 				<section>
-					<h3>Why this isn't ideal</h3>
-					<ul>
-					<li>JS had to position ads based on a calc of the height of the page, and set ranges for when the ad was to be sticky. A scroll handler was then throttled to ~16ms (60fps) to check if the ads positioning needed to update and then interacted with the DOM to update it. <strong style="display:inline-block;background:yellow;color:#000;">Holy layout thrashing Batman!</strong></li>
-					<li>If business requirements changed to add or remove an ad, the code and calculation would have to change</li></ul>
+					<section>
+						<h3>Why this isn't ideal</h3>
+						<p>JS had to position ads based on a calc of the height of the page, and set ranges for when the ad was to be sticky. A scroll handler was then throttled to ~16ms (60fps) to check if the ads positioning needed to update and then interacted with the DOM to update it. <strong style="display:inline-block;background:yellow;color:#000;">Holy layout thrashing Batman!</strong></p>
+					</section>
+					<section>
+						<h3>Why this isn't ideal</h3>
+						<blockquote style="width: 100%;font-size: 80%;" cite="https://developers.google.com/web/updates/2012/08/Stick-your-landings-position-sticky-lands-in-WebKit">
+							&ldquo;In general, scroll handlers are never a good idea. Folks tend to do too much work and wonder why their UI is janky. Something else to consider is that more and more browsers are implementing hardware accelerated scrolling to improve performance. The problem with this is that when JS scroll handlers are in play, browsers may fall back into a slower (software) mode. Now we're no longer running on the GPU. Instead, we're back on the CPU. The result? User's perceive more jank when scrolling your page.&rdquo;
+						</blockquote>
+					</section>
+					<section>
+						<h3>Why this isn't ideal</h3>
+						<p><strong>Fragile Markup:</strong> If business requirements change to add or remove an ad, the code and calculation would have to change.</p>
+					</section>
 				</section>
 				<section>
 					<h3>Lets take a step back</h3>
@@ -169,6 +179,28 @@ $.map(stickyAds, function (val, i) {
 						<div id="removebox">Remove Box</div>
 					</div>
 				</section>
+				<section>
+					<h3>Sticky Behavior</h3>
+					<p>Based on the business/design requirements there are only two ways to solve the desired UX</p>
+					<ul>
+					<li class="fragment">JS scroll events to make items fixed/absolute at certain points in the document as it scrolls</li>
+					<li class="fragment">CSS - with <span style="color:yellow">position:sticky</span></li>
+				</section>
+				<section>
+					<h3>Demo of position: sticky;</h3>
+					<a href="/sticky-example.html" target="_blank">Sticky Demo</a>
+				</section>
+				<section>
+					<h3>position: sticky - Issues</h3>
+					<ul>
+						<li class="fragment">A parent with overflow set to auto(or anything) will prevent position: sticky from working in Chrome/Safari</li>
+						<li class="fragment">No IE support...BUT - Sticky positioning is in development for Edge</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Tying it all together</h3>
+					<p>Flexbox is the ultimate layout solution for most UI in 2017. It is now implemented in all browsers we support.
+				</section>
 			</div>
 		</div>
 
@@ -209,6 +241,12 @@ $.map(stickyAds, function (val, i) {
 			} );
 
 			// Something else to consider is that more and more browsers are implementing hardware accelerated scrolling to improve performance. The problem with this is that on JS scroll handlers are in play, browsers may fall back into a slower (software) mode. Now we're no longer running on the GPU. Instead, we're back on the CPU. The result? User's perceive more jank when scrolling your page.
+
+// 			In general, scroll handlers are never a good idea. Folks tend to do too much work and wonder why their UI is janky.
+
+// Something else to consider is that more and more browsers are implementing hardware accelerated scrolling to improve performance. The problem with this is that on JS scroll handlers are in play, browsers may fall back into a slower (software) mode. Now we're no longer running on the GPU. Instead, we're back on the CPU. The result? User's perceive more jank when scrolling your page.
+
+//smoother than that song by santana featuring rob thomas.
 		</script>
 	</body>
 </html>
